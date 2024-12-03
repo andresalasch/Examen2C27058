@@ -140,18 +140,18 @@ export default {
       }
 
       const totalChange = this.moneyInput - this.calculatePrice;
-      const changeBreakdown = this.getChange(totalChange);
+      const coinList = this.getChange(totalChange);
 
-      if (!changeBreakdown) {
-        this.error = "No hay suicientes monedas para el vuelto";
+      if (!coinList) {
+        this.error = "No hay suficientes monedas para el vuelto";
         return;
       }
 
-      for (let denomination in changeBreakdown) {
-        this.coins[denomination] -= changeBreakdown[denomination];
+      for (let denomination in coinList) {
+        this.coins[denomination] -= coinList[denomination];
       }
 
-      this.change = { total: totalChange, breakdown: changeBreakdown };
+      this.change = { total: totalChange, coinsUsed: coinList};
     },
     getChange(amount) {
       const coinTypesList = Object.keys(this.coins).sort((a, b) => b - a);
@@ -176,9 +176,9 @@ export default {
   html, body {
   margin: 0;
   padding: 0;
-  font-family: 'Arial', sans-serif;  /* You can change this to any font you prefer */
-  background-color: #f4f4f4;  /* Light gray background */
-  color: #333;  /* Dark gray text for good readability */
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
   height: 100%;
   display: flex;
   justify-content: center;
