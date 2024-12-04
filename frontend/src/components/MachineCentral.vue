@@ -139,10 +139,6 @@ export default {
       this.change = null;
       
       if (this.checkOrder()) {
-        for (let type in this.order) {
-          this.coffeeTypes[type].quantity -= this.order[type];
-        }
-
         const totalChange = this.moneyInput - this.calculatePrice;
         const coinList = this.getChange(totalChange);
 
@@ -151,7 +147,7 @@ export default {
           return;
         }
 
-        this.changeCoinAmount(coinList);
+        this.changeCoinAndCoffeeAmount(coinList);
 
         this.change = { total: totalChange, coinsUsed: coinList};
       }
@@ -170,9 +166,12 @@ export default {
 
       return amount === 0 ? coinsCount : null;
     },
-    changeCoinAmount(coinList) {
+    changeCoinAndCoffeeAmount(coinList) {
       for (let denomination in coinList) {
         this.coins[denomination] -= coinList[denomination];
+      }
+      for (let type in this.order) {
+        this.coffeeTypes[type].quantity -= this.order[type];
       }
     },
   },
@@ -182,14 +181,14 @@ export default {
 <style scoped>
   
   html, body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Arial', sans-serif;
-  background-color: #f4f4f4;
-  color: #333;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
   }
 
   .machine {
