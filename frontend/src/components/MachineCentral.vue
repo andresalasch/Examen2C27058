@@ -119,39 +119,42 @@ export default {
       this.error = null;
       this.change = null;
     },
-    buyCoffees() {
-      this.error = null;
-      this.change = null;
-
+    checkOrder() {
       for (let type in this.order) {
         if (this.order[type] > this.coffeeTypes[type].quantity) {
           this.error = `Solamente hay ${this.coffeeTypes[type].quantity} cafes de tipo ${type}`;
-          return;
+          return false;
         }
       }
 
       if (this.moneyInput < this.calculatePrice) {
         this.error = "No pagó lo suficiente";
-        return;
+        return false;
       }
 
-      for (let type in this.order) {
-        this.coffeeTypes[type].quantity -= this.order[type];
+      return true
+    },
+    buyCoffees() {
+      this.error = null;
+      this.change = null;
+      
+      if (this.checkOrder()) {
+        for (let type in this.order) {
+          this.coffeeTypes[type].quantity -= this.order[type];
+        }
+
+        const totalChange = this.moneyInput - this.calculatePrice;
+        const coinList = this.getChange(totalChange);
+
+        if (!coinList) {
+          this.error = "No hay suficientes monedas para el vuelto";
+          return;
+        }
+
+        this.changeCoinAmount(coinList);
+
+        this.change = { total: totalChange, coinsUsed: coinList};
       }
-
-      const totalChange = this.moneyInput - this.calculatePrice;
-      const coinList = this.getChange(totalChange);
-
-      if (!coinList) {
-        this.error = "No hay suficientes monedas para el vuelto";
-        return;
-      }
-
-      for (let denomination in coinList) {
-        this.coins[denomination] -= coinList[denomination];
-      }
-
-      this.change = { total: totalChange, coinsUsed: coinList};
     },
     getChange(amount) {
       const coinTypesList = Object.keys(this.coins).sort((a, b) => b - a);
@@ -166,6 +169,11 @@ export default {
       }
 
       return amount === 0 ? coinsCount : null;
+    },
+    changeCoinAmount(coinList) {
+      for (let denomination in coinList) {
+        this.coins[denomination] -= coinList[denomination];
+      }
     },
   },
 };
