@@ -1,11 +1,12 @@
 <template>
+  <header>
+    <h1 class="card-title text-center">Máquina de café</h1>
+  </header>
   <div class="machine">
     <div class="row justify-content-center">
       <div class="col-lg-8">
         <div class="card shadow">
           <div class="card-body">
-            <h1 class="card-title text-center">Máquina Expendedora</h1>
-
             <h2 class="h4 text-center mt-4">Cafés Disponibles</h2>
             <ul class="list-group list-group-flush">
               <li v-for="(coffee, type) in coffeeTypes" :key="type" class="list-group-item d-flex justify-content-between align-items-center">
@@ -30,7 +31,6 @@
 
             <h2 class="h4 text-center mt-4">Ingresar Dinero</h2>
             <div class="mb-3">
-              <label class="form-label">Dinero ingresado:</label>
               <input
                 type="number"
                 class="form-control"
@@ -39,7 +39,7 @@
               />
             </div>
 
-            <button @click="buyCoffees" class="btn btn-primary w-100">Realizar Compra</button>
+            <button @click="buyCoffees" class="btn btn-primary w-100">Comprar</button>
 
             <div v-if="error" class="alert alert-danger mt-3">{{ error }}</div>
             <div v-if="change" class="mt-3">
@@ -125,13 +125,13 @@ export default {
 
       for (let type in this.order) {
         if (this.order[type] > this.coffeeTypes[type].quantity) {
-          this.error = `No hay suficiente ${type}`;
+          this.error = `Solamente hay ${this.coffeeTypes[type].quantity} cafes de tipo ${type}`;
           return;
         }
       }
 
       if (this.moneyInput < this.calculatePrice) {
-        this.error = "Dinero insuficiente";
+        this.error = "No pagó lo suficiente";
         return;
       }
 
@@ -180,12 +180,15 @@ export default {
   background-color: #f4f4f4;
   color: #333;
   height: 100%;
-  display: flex;
   justify-content: center;
   align-items: center;
   }
 
   .machine {
+    background-color: burlywood;
+  }
+
+  .header{
     background-color: burlywood;
   }
 
